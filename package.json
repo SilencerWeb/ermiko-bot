@@ -6,9 +6,11 @@
     "dev": "nodemon src/index.js"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "telegraf": "^3.29.0"
   },
   "devDependencies": {
+    "dotenv": "^7.0.0",
     "nodemon": "^1.19.0"
   }
 }
