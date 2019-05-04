@@ -32,6 +32,7 @@ const generateJSON = () => {
       posts.forEach((post) => {
         const formattedPost = {};
         formattedPost.title = post.data.title;
+        formattedPost.status = 'pending';
 
         let postData = null;
         let postHint = null;
@@ -126,20 +127,62 @@ const sendPosts = () => {
         } else {
           const postsAsArray = JSON.parse(posts);
 
-          postsAsArray.forEach((post) => {
+          postsAsArray.forEach((post, index) => {
+            if (post.status === 'sent') return;
+
             const postTitle = post.title;
             const postLink = post.link;
 
             if (post.type === 'video') {
-              telegram.sendVideo(554773669, postLink, { caption: postTitle }).catch((error) => {
-                console.log(post);
-                console.log(error);
-              });
+              telegram.sendVideo(554773669, postLink, { caption: postTitle })
+                .then(() => {
+                  postsAsArray[index].status = 'sent';
+
+                  const postsAsJSON = JSON.stringify(postsAsArray);
+                  const formattedPostsFileName = `formatted-posts.json`;
+
+                  fs.writeFile(`posts/${folderName}/${formattedPostsFileName}`, postsAsJSON, 'utf8', () => {
+                    console.log(`posts/${folderName}/${formattedPostsFileName} was successfully rewrote`);
+                  });
+                })
+                .catch((error) => {
+                  console.log(post);
+                  console.log(error);
+
+                  postsAsArray[index].status = 'failed';
+
+                  const postsAsJSON = JSON.stringify(postsAsArray);
+                  const formattedPostsFileName = `formatted-posts.json`;
+
+                  fs.writeFile(`posts/${folderName}/${formattedPostsFileName}`, postsAsJSON, 'utf8', () => {
+                    console.log(`posts/${folderName}/${formattedPostsFileName} was successfully rewrote`);
+                  });
+                });
             } else if (post.type === 'image') {
-              telegram.sendPhoto(554773669, postLink, { caption: postTitle }).catch((error) => {
-                console.log(post);
-                console.log(error);
-              });
+              telegram.sendPhoto(554773669, postLink, { caption: postTitle })
+                .then(() => {
+                  postsAsArray[index].status = 'sent';
+
+                  const postsAsJSON = JSON.stringify(postsAsArray);
+                  const formattedPostsFileName = `formatted-posts.json`;
+
+                  fs.writeFile(`posts/${folderName}/${formattedPostsFileName}`, postsAsJSON, 'utf8', () => {
+                    console.log(`posts/${folderName}/${formattedPostsFileName} was successfully rewrote`);
+                  });
+                })
+                .catch((error) => {
+                  console.log(post);
+                  console.log(error);
+
+                  postsAsArray[index].status = 'failed';
+
+                  const postsAsJSON = JSON.stringify(postsAsArray);
+                  const formattedPostsFileName = `formatted-posts.json`;
+
+                  fs.writeFile(`posts/${folderName}/${formattedPostsFileName}`, postsAsJSON, 'utf8', () => {
+                    console.log(`posts/${folderName}/${formattedPostsFileName} was successfully rewrote`);
+                  });
+                });
             }
           });
         }
@@ -147,3 +190,5 @@ const sendPosts = () => {
     }
   });
 };
+
+sendPosts();
