@@ -33,18 +33,28 @@ const generateJSON = () => {
         const formattedPost = {};
         formattedPost.title = post.data.title;
 
-        let postData = post.data;
-        let postHint = post.data.post_hint;
+        let postData = null;
+        let postHint = null;
 
         if (post.data.post_hint === 'link') {
           if (post.data.crosspost_parent_list) {
             postData = post.data.crosspost_parent_list[0];
-            postHint = postData.post_hint === 'link' ? postData.domain === 'i.imgur.com' ? 'rich:video' : 'image' : postData.post_hint;
+
+            if (postData.post_hint === 'link') {
+              postHint = postData.domain === 'i.imgur.com' ? 'rich:video' : 'image';
+            } else {
+              postHint = postData.post_hint;
+            }
           } else if (post.data.domain === 'i.imgur.com') {
+            postData = post.data;
             postHint = 'rich:video';
           } else {
+            postData = post.data;
             postHint = 'image';
           }
+        } else {
+          postData = post.data;
+          postHint = post.data.post_hint;
         }
 
         switch (postHint) {
@@ -79,27 +89,38 @@ const generateJSON = () => {
       const postsAsJSON = JSON.stringify(posts);
       const formattedPostsAsJSON = JSON.stringify(formattedPosts);
 
-      const postsFileName = `posts-${getDateAsString()}.json`;
-      const formattedPostsFileName = `formatted-posts-${getDateAsString()}.json`;
+      const folderName = getDateAsString();
 
-      fs.writeFile(postsFileName, postsAsJSON, 'utf8', () => {
-        console.log(`${postsFileName} was successfully created`);
+      if (!fs.existsSync('posts')) {
+        fs.mkdirSync('posts');
+      }
+
+      if (!fs.existsSync(`posts/${folderName}`)) {
+        fs.mkdirSync(`posts/${folderName}`);
+      }
+
+      const postsFileName = `original-posts.json`;
+      const formattedPostsFileName = `formatted-posts.json`;
+
+      fs.writeFile(`posts/${folderName}/${postsFileName}`, postsAsJSON, 'utf8', () => {
+        console.log(`posts/${folderName}/${postsFileName} was successfully created`);
       });
 
-      fs.writeFile(formattedPostsFileName, formattedPostsAsJSON, 'utf8', () => {
-        console.log(`${formattedPostsFileName} was successfully created`);
+      fs.writeFile(`posts/${folderName}/${formattedPostsFileName}`, formattedPostsAsJSON, 'utf8', () => {
+        console.log(`posts/${folderName}/${formattedPostsFileName} was successfully created`);
       });
     });
 };
 
 const sendPosts = () => {
-  const formattedPostsFileName = `formatted-posts-${getDateAsString()}.json`;
+  const folderName = getDateAsString();
+  const formattedPostsFileName = `formatted-posts.json`;
 
-  fs.access(formattedPostsFileName, fs.F_OK, (error) => {
+  fs.access(`posts/${folderName}/${formattedPostsFileName}`, fs.F_OK, (error) => {
     if (error) {
       generateJSON().then(() => sendPosts());
     } else {
-      fs.readFile(formattedPostsFileName, 'utf8', (error, posts) => {
+      fs.readFile(`posts/${folderName}/${formattedPostsFileName}`, 'utf8', (error, posts) => {
         if (error) {
           console.log(error);
         } else {
