@@ -1,5 +1,6 @@
 .idea
 .DS_Store
-node_modules
-dist
 .env
+
+node_modules/
+posts/
