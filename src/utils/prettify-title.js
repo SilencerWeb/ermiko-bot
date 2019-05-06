@@ -1,0 +1,5 @@
+export const prettifyTitle = (title) => {
+  return title
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+};
