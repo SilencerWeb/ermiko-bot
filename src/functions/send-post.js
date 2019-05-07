@@ -50,6 +50,8 @@ export const sendPost = (channel) => {
 
             fs.writeFile(formattedPostsFilePath, postsAsJSON, 'utf8', () => {
               console.log(`${formattedPostsFilePath} was successfully rewrote`);
+
+              sendPost(channel);
             });
           };
 
@@ -57,6 +59,8 @@ export const sendPost = (channel) => {
 
           const postToSendIndex = postsAsArray.findIndex((formattedPost) => formattedPost.status === 'not sent');
           const postToSend = postsAsArray[postToSendIndex];
+
+          if (!postToSend) return;
 
           const postTitle = postToSend.title;
           const postLink = postToSend.link;

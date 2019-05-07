@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "cron": "^1.7.1",
     "telegraf": "^3.29.0"
   },
   "devDependencies": {
