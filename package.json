@@ -2,9 +2,11 @@
   "name": "subreddits-to-channels-bot",
   "version": "0.1.0",
   "scripts": {
-    "start": "nodemon --exec babel-node src/index.js",
+    "start": "node dist/index.js",
+    "start:dev": "nodemon --exec babel-node src/index.js",
+    "dev": "yarn start:dev",
     "build": "babel src --out-dir dist",
-    "serve": "node dist/index.js"
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "axios": "^0.18.0",
