@@ -1,10 +1,11 @@
 import fs from 'fs';
 import axios from 'axios';
 import { getDateAsString, sendErrorMessage, prettifyTitle } from '../utils/utils';
+import { CHANNELS_INFO } from '../constants';
 
 
-const fetchPosts = () => {
-  return axios.get('https://www.reddit.com/r/aww/top/.json?t=day&limit=100');
+const fetchPosts = (subreddit) => {
+  return axios.get(`https://www.reddit.com/r/${subreddit}/top/.json?t=day&limit=100`);
 };
 
 const formatPosts = (posts) => {
@@ -73,7 +74,7 @@ const formatPosts = (posts) => {
   return { originalPosts, formattedPosts };
 };
 
-const savePosts = (originalPosts, formattedPosts) => {
+const savePosts = (originalPosts, formattedPosts, channel) => {
   const originalPostsAsJSON = JSON.stringify(originalPosts);
   const formattedPostsAsJSON = JSON.stringify(formattedPosts);
 
@@ -83,8 +84,14 @@ const savePosts = (originalPosts, formattedPosts) => {
     fs.mkdirSync(postsFolderName);
   }
 
+  const channelPostsFolderPath = `${postsFolderName}/${channel}`;
+
+  if (!fs.existsSync(channelPostsFolderPath)) {
+    fs.mkdirSync(channelPostsFolderPath);
+  }
+
   const todayPostsFolderName = getDateAsString();
-  const todayPostsFolderPath = `${postsFolderName}/${todayPostsFolderName}`;
+  const todayPostsFolderPath = `${channelPostsFolderPath}/${todayPostsFolderName}`;
 
   if (!fs.existsSync(todayPostsFolderPath)) {
     fs.mkdirSync(todayPostsFolderPath);
@@ -105,12 +112,15 @@ const savePosts = (originalPosts, formattedPosts) => {
 };
 
 
-export const generateJSON = () => {
-  return fetchPosts()
+export const generateJSON = (channel) => {
+  const channelInfo = CHANNELS_INFO[channel];
+  const subreddit = channelInfo.subreddit;
+
+  return fetchPosts(subreddit)
     .then((response) => {
       return formatPosts(response.data);
     })
     .then(({ originalPosts, formattedPosts }) => {
-      return savePosts(originalPosts, formattedPosts);
+      return savePosts(originalPosts, formattedPosts, channel);
     });
 };

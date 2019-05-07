@@ -1,5 +1,5 @@
 import { generateJSON } from './generate-json';
-import { sendPosts } from './send-posts';
+import { sendPost } from './send-post';
 
 
-export { generateJSON, sendPosts };
+export { generateJSON, sendPost };
