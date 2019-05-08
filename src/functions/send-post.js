@@ -17,7 +17,7 @@ export const sendPost = (channel) => {
 
   fs.access(formattedPostsFilePath, fs.F_OK, (error) => {
     if (error) {
-      generateJSON().then(() => sendPost(channel));
+      generateJSON(channel).then(() => sendPost(channel));
     } else {
       fs.readFile(formattedPostsFilePath, 'utf8', (error, posts) => {
         if (error) {
