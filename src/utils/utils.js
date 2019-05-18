@@ -1,6 +1,4 @@
-import { getDateAsString } from './get-date-as-string';
-import { sendErrorMessage } from './send-error-message';
-import { prettifyTitle } from './prettify-title';
-
-
-export { getDateAsString, sendErrorMessage, prettifyTitle };
+export { getCurrentUTCDate } from './get-current-utc-date';
+export { getOffsetDate } from './get-offset-date';
+export { transformUnixTimestampIntoDate } from './transform-unix-timestamp-into-date';
+export { prettifyTitle } from './prettify-title';

@@ -1,4 +1,4 @@
-import { startCron } from './functions/functions';
+import { registerCronJob } from './functions/functions';
 
 
-startCron();
+registerCronJob();
