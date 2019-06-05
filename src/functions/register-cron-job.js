@@ -1,6 +1,6 @@
 const CronJob = require('cron').CronJob;
-const axios = require('axios');
-import { sendPostToModerationGroup } from './functions';
+import axios from 'axios';
+import { createPost, sendPostToModerationGroup } from './functions';
 import { getCurrentUTCDate, transformUnixTimestampIntoDate, getOffsetDate } from '../utils/utils';
 import { CHANNELS_INFO } from '../constants/constants';
 
@@ -23,9 +23,7 @@ const fetchNewPosts = () => {
 const getPostsFromFetchResponses = (fetchResponses) => {
   const posts = [];
 
-  fetchResponses.forEach((fetchResponse) => {
-    posts.push(...fetchResponse.data.data.children);
-  });
+  fetchResponses.forEach((fetchResponse) => posts.push(...fetchResponse.data.data.children));
 
   return posts;
 };
@@ -44,18 +42,8 @@ export const registerCronJob = () => {
     if (!fetchResponses) return;
 
     const posts = getPostsFromFetchResponses(fetchResponses);
-
     const recentPosts = getRecentPosts(posts);
 
-    recentPosts.forEach((post) => {
-      const channelName = Object.keys(CHANNELS_INFO).find((channelName) => {
-        const channelInfo = CHANNELS_INFO[channelName];
-        const subreddit = channelInfo.subreddit;
-
-        return subreddit === post.data.subreddit;
-      });
-
-      sendPostToModerationGroup(post, channelName);
-    });
+    recentPosts.forEach((post) => createPost(post).then((savedPost) => sendPostToModerationGroup(savedPost, savedPost.channel)));
   }, null, true);
 };

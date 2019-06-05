@@ -5,7 +5,6 @@ export const formatPost = (post) => {
   const formattedPost = {};
 
   formattedPost.title = prettifyTitle(post.data.title);
-  formattedPost.status = 'not sent';
 
   let postData = null;
   let postHint = null;
