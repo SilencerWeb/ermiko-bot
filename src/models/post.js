@@ -7,6 +7,7 @@ const postSchema = new mongoose.Schema({
   type: String,
   status: String, // published | failed | approved | dismissed | waitingForModeration
   channel: String,
+  created: Date,
 });
 
 const Post = mongoose.model('Post', postSchema);

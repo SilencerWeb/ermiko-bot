@@ -46,7 +46,12 @@ const registerFetchingNewPostsCronJob = () => {
     const recentPosts = getRecentPosts(posts);
 
     recentPosts.forEach((post) => {
-      createPost(post).then((savedPost) => sendPostToModerationGroup(savedPost, savedPost.channel));
+      createPost(post)
+        .then((savedPost) => sendPostToModerationGroup(savedPost, savedPost.channel))
+        .catch((error) => {
+          console.log('Error on saving new post!');
+          console.log(`Error message: ${error.message}`);
+        });
     });
   }, null, true);
 };

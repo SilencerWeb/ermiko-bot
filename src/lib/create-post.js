@@ -8,15 +8,11 @@ const createPost = (post) => {
 
   formattedPost.status = 'waitingForModeration';
   formattedPost.channel = Object.keys(CHANNELS_INFO).find((channelName) => CHANNELS_INFO[channelName].subreddit === post.data.subreddit);
+  formattedPost.created = new Date();
 
   const newPost = new Post(formattedPost);
 
-  return newPost.save((error) => {
-    if (error) {
-      console.log('Error on saving new post!');
-      console.log(`Error message: ${error.message}`);
-    }
-  });
+  return newPost.save();
 };
 
 
