@@ -11,7 +11,12 @@ const createPost = (post) => {
 
   const newPost = new Post(formattedPost);
 
-  return newPost.save();
+  return newPost.save((error) => {
+    if (error) {
+      console.log('Error on saving new post!');
+      console.log(`Error message: ${error.message}`);
+    }
+  });
 };
 
 

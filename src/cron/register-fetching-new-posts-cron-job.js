@@ -12,12 +12,12 @@ const fetchNewPosts = () => {
       const subreddit = channelInfo.subreddit;
       const subredditNewPostsUrl = `https://reddit.com/r/${subreddit}/new.json`;
 
-      return axios.get(subredditNewPostsUrl);
+      return axios.get(subredditNewPostsUrl).catch((error) => {
+        console.log(`Error on fetching new posts from subreddit ${subreddit}!`);
+        console.log(`Error message: ${error.message}`);
+      });
     }),
-  ).catch((error) => {
-    console.log(`Error on fetching new posts!`);
-    console.log(`Error: ${error.message}`);
-  });
+  );
 };
 
 const getPostsFromFetchResponses = (fetchResponses) => {
@@ -37,7 +37,7 @@ const getRecentPosts = (posts) => {
 
 const registerFetchingNewPostsCronJob = () => {
 
-  new CronJob('*/30 * * * * *', async () => {
+  new CronJob('*/30 * * * * *', async () => { // Every 30th second
     const fetchResponses = await fetchNewPosts();
 
     if (!fetchResponses) return;

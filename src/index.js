@@ -1,7 +1,7 @@
 require('dotenv').config();
 const Telegraf = require('telegraf');
 const { setUpDatabase } = require('./lib');
-const { registerFetchingNewPostsCronJob } = require('./cron');
+const { registerFetchingNewPostsCronJob, registerDeletingDismissedPostsCronJob } = require('./cron');
 const { setUpApprovePostAction, setUpDismissPostAction, setUpRemovePostCaptionAction } = require('./actions');
 const { bot } = require('./bot');
 
@@ -11,6 +11,7 @@ setUpDatabase();
 
 // Registering cron jobs
 registerFetchingNewPostsCronJob();
+registerDeletingDismissedPostsCronJob();
 
 // Setting up sessions
 bot.use(Telegraf.session());

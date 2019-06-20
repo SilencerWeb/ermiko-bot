@@ -11,8 +11,13 @@ const setUpDatabase = () => {
   );
 
   const database = mongoose.connection;
-  database.on('error', (error) => console.log(`Error while connecting to the database: ${error}`));
-  database.once('open', () => console.log('Database connected'));
+
+  database.on('error', (error) => {
+    console.log('Error on connecting to the database!');
+    console.log(`Error message: ${error}`);
+  });
+
+  database.once('open', () => console.log('Database is successfully connected!'));
 };
 
 
