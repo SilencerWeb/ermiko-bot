@@ -1,7 +1,7 @@
-import { prettifyTitle } from '../utils/utils';
+const { prettifyTitle } = require('../utils');
 
 
-export const formatPost = (post) => {
+const formatPost = (post) => {
   const formattedPost = {};
 
   formattedPost.title = prettifyTitle(post.data.title);
@@ -53,3 +53,6 @@ export const formatPost = (post) => {
 
   return formattedPost;
 };
+
+
+module.exports = { formatPost };

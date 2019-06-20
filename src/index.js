@@ -1,5 +1,5 @@
-import { setUpDatabase } from './functions/set-up-database';
-import { registerCronJob } from './functions/register-cron-job';
+require('dotenv').config();
+const { setUpDatabase, registerCronJob } = require('./lib');
 
 
 setUpDatabase();

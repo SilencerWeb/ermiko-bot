@@ -1,9 +1,9 @@
-import { formatPost } from './functions';
-import { Post } from '../models/models';
-import { CHANNELS_INFO } from '../constants/constants';
+const { formatPost } = require('./');
+const { Post } = require('../models');
+const { CHANNELS_INFO } = require('../constants');
 
 
-export const createPost = (post) => {
+const createPost = (post) => {
   const formattedPost = formatPost(post);
 
   formattedPost.status = 'waitingForModeration';
@@ -13,3 +13,7 @@ export const createPost = (post) => {
 
   return newPost.save();
 };
+
+
+module.exports = { createPost };
+

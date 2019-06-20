@@ -1,4 +1,4 @@
-export const CHANNELS_INFO = {
+const CHANNELS_INFO = {
   'AwwSoCute': {
     subreddit: 'aww',
     moderationGroup: '-1001399941830',
@@ -8,3 +8,6 @@ export const CHANNELS_INFO = {
     moderationGroup: '-1001289633926',
   },
 };
+
+
+module.exports = { CHANNELS_INFO };

@@ -1,7 +1,7 @@
-import { telegramBot } from '../bot';
+const { telegramBot } = require('../bot');
 
 
-export const sendPost = (post, chat, isChatModerationGroup) => {
+const sendPost = (post, chat, isChatModerationGroup) => {
   const postTitle = post.title;
   const postLink = post.link;
 
@@ -46,3 +46,6 @@ export const sendPost = (post, chat, isChatModerationGroup) => {
     });
   }
 };
+
+
+module.exports = { sendPost };

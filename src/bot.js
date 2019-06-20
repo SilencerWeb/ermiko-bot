@@ -1,7 +1,7 @@
-import Telegraf from 'telegraf';
-import Telegram from 'telegraf/telegram';
-import { Post } from './models/models';
-import { BOT_TOKEN } from './constants/constants';
+const Telegraf = require('telegraf');
+const Telegram = require('telegraf/telegram');
+const { Post } = require('./models');
+const { BOT_TOKEN } = require('./constants');
 
 
 const telegrafBot = new Telegraf(BOT_TOKEN);
@@ -33,4 +33,4 @@ telegrafBot.launch();
 const telegramBot = new Telegram(BOT_TOKEN);
 
 
-export { telegrafBot, telegramBot };
+module.exports = { telegrafBot, telegramBot };
