@@ -1,4 +1,4 @@
-const { sendPost } = require('./');
+const { sendPost } = require('./send-post');
 
 
 const sendPostToChannel = (post, channel) => {

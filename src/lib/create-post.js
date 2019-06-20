@@ -1,4 +1,4 @@
-const { formatPost } = require('./');
+const { formatPost } = require('./format-post');
 const { Post } = require('../models');
 const { CHANNELS_INFO } = require('../constants');
 

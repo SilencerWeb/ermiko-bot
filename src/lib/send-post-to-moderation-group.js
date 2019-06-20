@@ -1,5 +1,5 @@
-const { sendPost } = require('./');
-const { CHANNELS_INFO } = require('../constants/');
+const { sendPost } = require('./send-post');
+const { CHANNELS_INFO } = require('../constants');
 
 
 const sendPostToModerationGroup = (post, channel) => {

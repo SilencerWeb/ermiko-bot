@@ -1,4 +1,4 @@
-const { telegramBot } = require('../bot');
+const { bot } = require('../bot');
 
 
 const sendPost = (post, chat, isChatModerationGroup) => {
@@ -35,12 +35,12 @@ const sendPost = (post, chat, isChatModerationGroup) => {
   }
 
   if (post.type === 'video') {
-    telegramBot.sendVideo(chat, postLink, options).catch((error) => {
+    bot.telegram.sendVideo(chat, postLink, options).catch((error) => {
       console.log(`Error on sending post to moderation group!`);
       console.log(`Error: ${error.message}`);
     });
   } else if (post.type === 'image') {
-    telegramBot.sendPhoto(chat, postLink, options).catch((error) => {
+    bot.telegram.sendPhoto(chat, postLink, options).catch((error) => {
       console.log(`Error on sending post to moderation group!`);
       console.log(`Error: ${error.message}`);
     });

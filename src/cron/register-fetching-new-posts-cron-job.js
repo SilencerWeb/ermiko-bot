@@ -1,6 +1,6 @@
 const CronJob = require('cron').CronJob;
 const axios = require('axios');
-const { createPost, sendPostToModerationGroup } = require('./');
+const { createPost, sendPostToModerationGroup } = require('../lib');
 const { getCurrentUTCDate, transformUnixTimestampIntoDate, getOffsetDate } = require('../utils');
 const { CHANNELS_INFO } = require('../constants');
 
@@ -35,7 +35,7 @@ const getRecentPosts = (posts) => {
 };
 
 
-const registerCronJob = () => {
+const registerFetchingNewPostsCronJob = () => {
 
   new CronJob('*/30 * * * * *', async () => {
     const fetchResponses = await fetchNewPosts();
@@ -45,9 +45,11 @@ const registerCronJob = () => {
     const posts = getPostsFromFetchResponses(fetchResponses);
     const recentPosts = getRecentPosts(posts);
 
-    recentPosts.forEach((post) => createPost(post).then((savedPost) => sendPostToModerationGroup(savedPost, savedPost.channel)));
+    recentPosts.forEach((post) => {
+      createPost(post).then((savedPost) => sendPostToModerationGroup(savedPost, savedPost.channel));
+    });
   }, null, true);
 };
 
 
-module.exports = { registerCronJob };
+module.exports = { registerFetchingNewPostsCronJob };
