@@ -9,10 +9,8 @@ const setUpApprovePostAction = () => {
     // We just need here an empty function so method findByIdAndUpdate would be executed
     Post.findByIdAndUpdate(id, { status: 'approved' }, (error) => {
       if (error) {
-        console.log(`Error on changing post's status with ID ${id} to "approved"!`);
+        console.log(`Error on changing post's "status" with ID ${id} to "approved"!`);
         console.log(`Error message: ${error.message}`);
-      } else {
-        console.log(`Post's status with ID ${id} is successfully changed to "approved"!`);
       }
     });
   });

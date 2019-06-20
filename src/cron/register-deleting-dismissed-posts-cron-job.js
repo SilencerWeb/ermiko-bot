@@ -9,8 +9,6 @@ const registerDeletingDismissedPostsCronJob = () => {
       if (error) {
         console.log('Error on deleting dismissed posts!');
         console.log(`Error message: ${error.message}`);
-      } else {
-        console.log('Dismissed posts are successfully deleted!');
       }
     });
   }, null, true);
