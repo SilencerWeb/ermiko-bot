@@ -6,7 +6,7 @@ const sendPostToModerationGroup = (post, channel) => {
   const channelInfo = CHANNELS_INFO[channel];
   const moderationGroupId = IS_PRODUCTION ? channelInfo.moderationGroupId : DEVELOPMENT_GROUP_ID;
 
-  sendPost(post, moderationGroupId, true);
+  return sendPost(post, moderationGroupId, true);
 };
 
 

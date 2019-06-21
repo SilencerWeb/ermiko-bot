@@ -16,11 +16,17 @@ const sendPost = (post, chat, isChatModerationGroup) => {
   }
 
   if (type === 'video') {
-    bot.telegram.sendVideo(chat, link, options)
+    return bot.telegram.sendVideo(chat, link, options)
       .then((message) => {
-        const moderationGroupMessageId = message.message_id;
+        const updateOptions = {};
 
-        Post.findByIdAndUpdate(_id, { moderationGroupMessageId }, (error) => {
+        if (isChatModerationGroup === true) {
+          updateOptions.moderationGroupMessageId = message.message_id;
+        } else {
+          updateOptions.status = 'published';
+        }
+
+        Post.findByIdAndUpdate(_id, updateOptions, (error) => {
           if (error) {
             console.log(`Error on changing post's "moderationGroupMessageId" with ID ${_id} to "${moderationGroupMessageId}"!`);
             console.log(`Error message: ${error.message}`);
@@ -32,11 +38,17 @@ const sendPost = (post, chat, isChatModerationGroup) => {
         console.log(`Error message: ${error.message}`);
       });
   } else if (type === 'image') {
-    bot.telegram.sendPhoto(chat, link, options)
+    return bot.telegram.sendPhoto(chat, link, options)
       .then((message) => {
-        const moderationGroupMessageId = message.message_id;
+        const updateOptions = {};
 
-        Post.findByIdAndUpdate(_id, { moderationGroupMessageId }, (error) => {
+        if (isChatModerationGroup === true) {
+          updateOptions.moderationGroupMessageId = message.message_id;
+        } else {
+          updateOptions.status = 'published';
+        }
+
+        Post.findByIdAndUpdate(_id, updateOptions, (error) => {
           if (error) {
             console.log(`Error on changing post's "moderationGroupMessageId" with ID ${_id} to "${moderationGroupMessageId}"!`);
             console.log(`Error message: ${error.message}`);

@@ -1,6 +1,10 @@
 require('dotenv').config();
 const { setUpDatabase } = require('./lib');
-const { registerFetchingNewPostsCronJob, registerDeletingDismissedPostsCronJob } = require('./cron');
+const {
+  registerFetchingNewPostsCronJob,
+  registerDeletingDismissedPostsCronJob,
+  registerPublishingPostsCronJob,
+} = require('./cron');
 const {
   setUpApprovePostAction,
   setUpDismissPostAction,
@@ -20,6 +24,7 @@ setUpDatabase();
 // Registering cron jobs
 registerFetchingNewPostsCronJob();
 registerDeletingDismissedPostsCronJob();
+registerPublishingPostsCronJob();
 
 // Setting up actions
 // Order matters because of regexps!

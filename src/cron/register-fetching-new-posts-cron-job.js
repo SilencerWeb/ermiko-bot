@@ -47,6 +47,7 @@ const registerFetchingNewPostsCronJob = () => {
     recentPosts.forEach((post) => {
       const formattedPost = formatPost(post);
       if (!formattedPost) return;
+
       formattedPost.channel = Object.keys(CHANNELS_INFO).find((channelName) => CHANNELS_INFO[channelName].subreddit === post.data.subreddit);
 
       createPost(formattedPost)
