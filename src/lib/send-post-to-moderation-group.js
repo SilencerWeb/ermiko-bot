@@ -1,12 +1,12 @@
 const { sendPost } = require('./send-post');
-const { CHANNELS_INFO } = require('../constants');
+const { CHANNELS_INFO, IS_PRODUCTION, DEVELOPMENT_GROUP_ID } = require('../constants');
 
 
 const sendPostToModerationGroup = (post, channel) => {
   const channelInfo = CHANNELS_INFO[channel];
-  const channelModerationGroup = channelInfo.moderationGroupId;
+  const moderationGroupId = IS_PRODUCTION ? channelInfo.moderationGroupId : DEVELOPMENT_GROUP_ID;
 
-  sendPost(post, channelModerationGroup, true);
+  sendPost(post, moderationGroupId, true);
 };
 
 

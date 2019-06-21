@@ -14,7 +14,7 @@ const setUpDatabase = () => {
 
   database.on('error', (error) => {
     console.log('Error on connecting to the database!');
-    console.log(`Error message: ${error}`);
+    console.log(`Error message: ${error.message}`);
   });
 
   database.once('open', () => console.log('Database is successfully connected!'));

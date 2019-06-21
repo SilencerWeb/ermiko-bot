@@ -1,6 +1,6 @@
 const { Post } = require('../models');
 const { bot } = require('../bot');
-const { CHANNELS_INFO, ACTION_NAMES } = require('../constants');
+const { CHANNELS_INFO, ACTION_NAMES, IS_PRODUCTION, DEVELOPMENT_GROUP_ID } = require('../constants');
 
 
 const setUpApprovePostConfirmationAction = () => {
@@ -17,7 +17,7 @@ const setUpApprovePostConfirmationAction = () => {
         const post = await Post.findById(id);
 
         const channelInfo = CHANNELS_INFO[post.channel];
-        const moderationGroupId = channelInfo.moderationGroupId;
+        const moderationGroupId = IS_PRODUCTION ? channelInfo.moderationGroupId : DEVELOPMENT_GROUP_ID;
         const moderationGroupMessageId = post.moderationGroupMessageId;
 
         bot.telegram.deleteMessage(moderationGroupId, moderationGroupMessageId);

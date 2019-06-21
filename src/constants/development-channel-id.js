@@ -1,0 +1,4 @@
+const DEVELOPMENT_CHANNEL_ID = process.env.DEVELOPMENT_CHANNEL_ID;
+
+
+module.exports = { DEVELOPMENT_CHANNEL_ID };
