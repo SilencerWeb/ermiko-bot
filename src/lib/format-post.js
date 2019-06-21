@@ -5,6 +5,7 @@ const formatPost = (post) => {
   const formattedPost = {};
 
   formattedPost.title = prettifyTitle(post.data.title);
+  formattedPost.originalPostLink = `https://reddit.com${post.data.permalink}`;
 
   let postData = null;
   let postHint = null;

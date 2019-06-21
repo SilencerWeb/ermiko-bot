@@ -1,41 +1,18 @@
 const { Post } = require('../models');
+const { generatePostKeyboard } = require('../keyboards');
 const { bot } = require('../bot');
 
 
-const generateReplyMarkup = (id) => {
-  return {
-    inline_keyboard: [
-      [
-        {
-          text: 'Remove caption',
-          callback_data: `remove_post_caption_${id}`,
-        },
-      ],
-      [
-        {
-          text: 'Approve',
-          callback_data: `approve_post_${id}`,
-        },
-        {
-          text: 'Dismiss',
-          callback_data: `dismiss_post_${id}`,
-        },
-      ],
-    ],
-  };
-};
-
-
 const sendPost = (post, chat, isChatModerationGroup) => {
-  const { _id, title, link, type } = post;
+  const { _id, title, link, type, isCaptionVisible } = post;
 
   const options = {};
-  if (title) {
+  if (title && isCaptionVisible) {
     options.caption = title;
   }
 
   if (isChatModerationGroup === true) {
-    options.reply_markup = generateReplyMarkup(_id);
+    options.reply_markup = generatePostKeyboard(_id, isCaptionVisible);
   }
 
   if (type === 'video') {

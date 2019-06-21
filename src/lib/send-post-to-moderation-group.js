@@ -4,7 +4,7 @@ const { CHANNELS_INFO } = require('../constants');
 
 const sendPostToModerationGroup = (post, channel) => {
   const channelInfo = CHANNELS_INFO[channel];
-  const channelModerationGroup = channelInfo.moderationGroup;
+  const channelModerationGroup = channelInfo.moderationGroupId;
 
   sendPost(post, channelModerationGroup, true);
 };

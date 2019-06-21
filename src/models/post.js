@@ -3,12 +3,14 @@ const mongoose = require('mongoose');
 
 const postSchema = new mongoose.Schema({
   title: String,
-  link: String,
+  isCaptionVisible: { type: Boolean, default: true },
   type: String,
-  status: String, // published | failed | approved | dismissed | waitingForModeration
+  link: String,
+  status: { type: String, default: 'waitingForModeration' }, // published | failed | approved | dismissed | waitingForModeration
   channel: String,
   moderationGroupMessageId: String,
-  created: Date,
+  created: { type: Date, default: Date.now() },
+  originalPostLink: String,
 });
 
 const Post = mongoose.model('Post', postSchema);

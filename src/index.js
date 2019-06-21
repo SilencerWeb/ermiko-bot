@@ -1,8 +1,16 @@
 require('dotenv').config();
-const Telegraf = require('telegraf');
 const { setUpDatabase } = require('./lib');
 const { registerFetchingNewPostsCronJob, registerDeletingDismissedPostsCronJob } = require('./cron');
-const { setUpApprovePostAction, setUpDismissPostAction, setUpRemovePostCaptionAction } = require('./actions');
+const {
+  setUpApprovePostAction,
+  setUpDismissPostAction,
+  setUpApprovePostConfirmationAction,
+  setUpDismissPostConfirmationAction,
+  setUpApprovePostRejectionAction,
+  setUpDismissPostRejectionAction,
+  setUpRemovePostCaptionAction,
+  setUpReturnPostCaptionAction,
+} = require('./actions');
 const { bot } = require('./bot');
 
 
@@ -13,13 +21,16 @@ setUpDatabase();
 registerFetchingNewPostsCronJob();
 registerDeletingDismissedPostsCronJob();
 
-// Setting up sessions
-bot.use(Telegraf.session());
-
 // Setting up actions
+// Order matters because of regexps!
+setUpApprovePostConfirmationAction();
+setUpDismissPostConfirmationAction();
+setUpApprovePostRejectionAction();
+setUpDismissPostRejectionAction();
 setUpApprovePostAction();
 setUpDismissPostAction();
 setUpRemovePostCaptionAction();
+setUpReturnPostCaptionAction();
 
 // Starting bot
 bot.startPolling();

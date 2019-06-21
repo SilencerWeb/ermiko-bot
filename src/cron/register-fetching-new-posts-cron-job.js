@@ -1,6 +1,6 @@
 const CronJob = require('cron').CronJob;
 const axios = require('axios');
-const { createPost, sendPostToModerationGroup } = require('../lib');
+const { createPost, formatPost, sendPostToModerationGroup } = require('../lib');
 const { getCurrentUTCDate, transformUnixTimestampIntoDate, getOffsetDate } = require('../utils');
 const { CHANNELS_INFO } = require('../constants');
 
@@ -39,14 +39,17 @@ const registerFetchingNewPostsCronJob = () => {
 
   new CronJob('*/30 * * * * *', async () => { // Every 30th second
     const fetchResponses = await fetchNewPosts();
-
     if (!fetchResponses) return;
 
     const posts = getPostsFromFetchResponses(fetchResponses);
     const recentPosts = getRecentPosts(posts);
 
     recentPosts.forEach((post) => {
-      createPost(post)
+      const formattedPost = formatPost(post);
+      if (!formattedPost) return;
+      formattedPost.channel = Object.keys(CHANNELS_INFO).find((channelName) => CHANNELS_INFO[channelName].subreddit === post.data.subreddit);
+
+      createPost(formattedPost)
         .then((savedPost) => sendPostToModerationGroup(savedPost, savedPost.channel))
         .catch((error) => {
           console.log('Error on saving new post!');

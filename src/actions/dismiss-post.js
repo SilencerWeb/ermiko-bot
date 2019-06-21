@@ -1,18 +1,22 @@
 const { Post } = require('../models');
+const { generatePostDismissConfirmationKeyboard } = require('../keyboards');
 const { bot } = require('../bot');
+const { CHANNELS_INFO, ACTION_NAMES } = require('../constants');
 
 
 const setUpDismissPostAction = () => {
-  bot.action(/dismiss_post_(.+)/, (context) => {
+  bot.action(ACTION_NAMES.dismiss_post.regexp, async (context) => {
     const id = context.match[1];
+    const callbackQueryId = context.update.callback_query.id;
 
-    // We just need here an empty function so method findByIdAndUpdate would be executed
-    Post.findByIdAndUpdate(id, { status: 'dismissed' }, (error) => {
-      if (error) {
-        console.log(`Error on changing post's "status" with ID ${id} to "dismissed"!`);
-        console.log(`Error message: ${error.message}`);
-      }
-    });
+    const post = await Post.findById(id);
+
+    const channelInfo = CHANNELS_INFO[post.channel];
+    const moderationGroupId = channelInfo.moderationGroupId;
+    const moderationGroupMessageId = post.moderationGroupMessageId;
+
+    bot.telegram.editMessageReplyMarkup(moderationGroupId, moderationGroupMessageId, '', generatePostDismissConfirmationKeyboard(id));
+    bot.telegram.answerCbQuery(callbackQueryId, '');
   });
 };
 
