@@ -10,7 +10,7 @@ const fetchNewPosts = () => {
     Object.keys(CHANNELS_INFO).map((channelName) => {
       const channelInfo = CHANNELS_INFO[channelName];
       const subreddit = channelInfo.subreddit;
-      const subredditNewPostsUrl = `https://reddit.com/r/${subreddit}/new.json`;
+      const subredditNewPostsUrl = `https://reddit.com/r/${subreddit}/new.json?limit=100`;
 
       return axios.get(subredditNewPostsUrl).catch((error) => {
         console.log(`Error on fetching new posts from subreddit ${subreddit}!`);
@@ -30,7 +30,12 @@ const getPostsFromFetchResponses = (fetchResponses) => {
 
 const getRecentPosts = (posts) => {
   return posts.filter((post) => {
-    return transformUnixTimestampIntoDate(post.data.created_utc) >= getOffsetDate(getCurrentUTCDate(), 30000); // 30000 milliseconds = 30 seconds
+    const postPublishingDate = transformUnixTimestampIntoDate(post.data.created_utc);
+    const currentUTCDate = getCurrentUTCDate();
+    const currentUTCDateWith15MinutesOffset = getOffsetDate(currentUTCDate, 900000); // 900000 milliseconds = 15 minutes
+    const currentUTCDateWith15Minutes30SecondsOffset = getOffsetDate(currentUTCDateWith15MinutesOffset, 30000); // 30000 milliseconds = 30 seconds
+
+    return currentUTCDateWith15Minutes30SecondsOffset <= postPublishingDate && postPublishingDate <= currentUTCDateWith15MinutesOffset;
   });
 };
 
