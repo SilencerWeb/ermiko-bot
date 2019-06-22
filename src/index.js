@@ -1,11 +1,7 @@
 require('dotenv').config();
 const { startServer } = require('./server');
 const { setUpDatabase } = require('./database');
-const {
-  registerFetchingNewPostsCronJob,
-  registerDeletingDismissedPostsCronJob,
-  registerPublishingPostsCronJob,
-} = require('./cron');
+const { registerFetchingNewPostsCronJob, registerPublishingPostsCronJob } = require('./cron');
 const {
   setUpApprovePostAction,
   setUpDismissPostAction,
@@ -27,7 +23,6 @@ setUpDatabase();
 
 // Registering cron jobs
 registerFetchingNewPostsCronJob();
-registerDeletingDismissedPostsCronJob();
 registerPublishingPostsCronJob();
 
 // Setting up actions
