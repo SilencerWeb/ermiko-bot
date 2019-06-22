@@ -5,7 +5,16 @@ const { CHANNELS_INFO, IS_PRODUCTION, DEVELOPMENT_CHANNEL_ID } = require('../con
 
 
 const publishRandomApprovedPost = async (channel) => {
-  const post = await Post.findOne({ status: 'approved' });
+  const queryOptions = {
+    status: 'approved',
+  };
+
+  if (IS_PRODUCTION === true) {
+    queryOptions.channel = channel;
+    channel = `@${channel}`;
+  }
+
+  const post = await Post.findOne(queryOptions);
   if (!post) throw new Error('No approved posts');
 
   return sendPostToChannel(post, channel);
