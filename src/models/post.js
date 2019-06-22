@@ -11,6 +11,7 @@ const postSchema = new mongoose.Schema({
   moderationGroupMessageId: String,
   created: { type: Date, default: Date.now() },
   originalPostLink: String,
+  error: String,
 });
 
 const Post = mongoose.model('Post', postSchema);

@@ -39,6 +39,13 @@ const sendPost = (post, chat, isChatModerationGroup) => {
         });
       })
       .catch((error) => {
+        Post.findByIdAndUpdate(_id, { status: 'failed', error: error.message }, (error) => {
+          if (error) {
+            console.log(`Error on changing post's "status" with ID ${_id} to "failed" and "error" to "${error.message}"!`);
+            console.log(`Error message: ${error.message}`);
+          }
+        });
+
         if (isChatModerationGroup === true) {
           console.log(`Error on sending post with ID ${_id} to moderation group!`);
           console.log(`Error message: ${error.message}`);
@@ -71,6 +78,13 @@ const sendPost = (post, chat, isChatModerationGroup) => {
         });
       })
       .catch((error) => {
+        Post.findByIdAndUpdate(_id, { status: 'failed', error: error.message }, (error) => {
+          if (error) {
+            console.log(`Error on changing post's "status" with ID ${_id} to "failed" and "error" to "${error.message}"!`);
+            console.log(`Error message: ${error.message}`);
+          }
+        });
+
         if (isChatModerationGroup === true) {
           console.log(`Error on sending post with ID ${_id} to moderation group!`);
           console.log(`Error message: ${error.message}`);
