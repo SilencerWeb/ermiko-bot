@@ -15,14 +15,19 @@ const publishRandomApprovedPost = async (channel) => {
 const registerPublishingPostsCronJob = () => {
 
   new CronJob('0 0 * * * *', () => { // Every hour
-    Object.keys(CHANNELS_INFO).forEach((channel) => {
-      channel = IS_PRODUCTION ? channel : DEVELOPMENT_CHANNEL_ID;
-
-      publishRandomApprovedPost(channel).catch((error) => {
-        console.log(`Error on publishing post to the channel "${channel}"!`);
+    if (IS_PRODUCTION) {
+      Object.keys(CHANNELS_INFO).forEach((channel) => {
+        publishRandomApprovedPost(channel).catch((error) => {
+          console.log(`Error on publishing post to the channel "${channel}"!`);
+          console.log(`Error message: ${error.message}`);
+        });
+      });
+    } else {
+      publishRandomApprovedPost(DEVELOPMENT_CHANNEL_ID).catch((error) => {
+        console.log(`Error on publishing post to the development channel!`);
         console.log(`Error message: ${error.message}`);
       });
-    });
+    }
   }, null, true);
 };
 
