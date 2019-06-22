@@ -23,8 +23,9 @@ const setUpReturnPostCaptionAction = () => {
         const moderationGroupId = IS_PRODUCTION ? channelInfo.moderationGroupId : DEVELOPMENT_GROUP_ID;
         const moderationGroupMessageId = post.moderationGroupMessageId;
 
-        bot.telegram.editMessageCaption(moderationGroupId, moderationGroupMessageId, '', title);
-        bot.telegram.editMessageReplyMarkup(moderationGroupId, moderationGroupMessageId, '', generatePostKeyboard(id, true));
+        bot.telegram.editMessageCaption(moderationGroupId, moderationGroupMessageId, '', title, {
+          reply_markup: generatePostKeyboard(id, true),
+        });
         bot.telegram.answerCbQuery(callbackQueryId, 'Caption was successfully returned');
       }
     });

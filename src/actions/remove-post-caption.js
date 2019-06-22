@@ -21,8 +21,9 @@ const setUpRemovePostCaptionAction = () => {
         const moderationGroupId = IS_PRODUCTION ? channelInfo.moderationGroupId : DEVELOPMENT_GROUP_ID;
         const moderationGroupMessageId = post.moderationGroupMessageId;
 
-        bot.telegram.editMessageCaption(moderationGroupId, moderationGroupMessageId, '', '');
-        bot.telegram.editMessageReplyMarkup(moderationGroupId, moderationGroupMessageId, '', generatePostKeyboard(id, false));
+        bot.telegram.editMessageCaption(moderationGroupId, moderationGroupMessageId, '', '', {
+          reply_markup: generatePostKeyboard(id, false),
+        });
         bot.telegram.answerCbQuery(callbackQueryId, 'Caption was successfully removed');
       }
     });
