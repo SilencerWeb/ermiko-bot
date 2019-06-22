@@ -2,30 +2,23 @@ const CronJob = require('cron').CronJob;
 const axios = require('axios');
 const { createPost, formatPost, sendPostToModerationGroup } = require('../lib');
 const { getCurrentUTCDate, transformUnixTimestampIntoDate, getOffsetDate } = require('../utils');
+const { Post } = require('../models');
 const { CHANNELS_INFO } = require('../constants');
 
 
-const fetchNewPosts = () => {
-  return Promise.all(
-    Object.keys(CHANNELS_INFO).map((channelName) => {
-      const channelInfo = CHANNELS_INFO[channelName];
-      const subreddit = channelInfo.subreddit;
-      const subredditNewPostsUrl = `https://reddit.com/r/${subreddit}/new.json?limit=100`;
+const fetchNewPosts = (channel) => {
+  const channelInfo = CHANNELS_INFO[channel];
+  const subreddit = channelInfo.subreddit;
+  const subredditNewPostsUrl = `https://reddit.com/r/${subreddit}/new.json?limit=100`;
 
-      return axios.get(subredditNewPostsUrl).catch((error) => {
-        console.log(`Error on fetching new posts from subreddit ${subreddit}!`);
-        console.log(`Error message: ${error.message}`);
-      });
-    }),
-  );
+  return axios.get(subredditNewPostsUrl).catch((error) => {
+    console.log(`Error on fetching new posts from subreddit "${subreddit}"!`);
+    console.log(`Error message: ${error.message}`);
+  });
 };
 
-const getPostsFromFetchResponses = (fetchResponses) => {
-  const posts = [];
-
-  fetchResponses.forEach((fetchResponse) => posts.push(...fetchResponse.data.data.children));
-
-  return posts;
+const getPostsFromFetchResponse = (fetchResponse) => {
+  return [...fetchResponse.data.data.children];
 };
 
 const getRecentPosts = (posts) => {
@@ -41,26 +34,32 @@ const getRecentPosts = (posts) => {
 
 
 const registerFetchingNewPostsCronJob = () => {
+  const WAITING_FOR_MODERATION_POSTS_LIMIT = 20;
 
-  new CronJob('*/30 * * * * *', async () => { // Every 30th second
-    const fetchResponses = await fetchNewPosts();
-    if (!fetchResponses) return;
+  new CronJob('*/30 * * * * *', () => { // Every 30th second
+    Object.keys(CHANNELS_INFO).forEach(async (channelName) => {
+      const waitingForModerationPostsAmount = await Post.countDocuments({ channel: channelName, status: 'waitingForModeration' });
+      if (waitingForModerationPostsAmount > WAITING_FOR_MODERATION_POSTS_LIMIT) return;
 
-    const posts = getPostsFromFetchResponses(fetchResponses);
-    const recentPosts = getRecentPosts(posts);
+      const fetchResponse = await fetchNewPosts(channelName);
+      if (!fetchResponse) return;
 
-    recentPosts.forEach((post) => {
-      const formattedPost = formatPost(post);
-      if (!formattedPost) return;
+      const posts = getPostsFromFetchResponse(fetchResponse);
+      const recentPosts = getRecentPosts(posts);
 
-      formattedPost.channel = Object.keys(CHANNELS_INFO).find((channelName) => CHANNELS_INFO[channelName].subreddit === post.data.subreddit);
+      recentPosts.forEach((post) => {
+        const formattedPost = formatPost(post);
+        if (!formattedPost) return;
 
-      createPost(formattedPost)
-        .then((savedPost) => sendPostToModerationGroup(savedPost, savedPost.channel))
-        .catch((error) => {
-          console.log('Error on saving new post!');
-          console.log(`Error message: ${error.message}`);
-        });
+        formattedPost.channel = Object.keys(CHANNELS_INFO).find((channelName) => CHANNELS_INFO[channelName].subreddit === post.data.subreddit);
+
+        createPost(formattedPost)
+          .then((savedPost) => sendPostToModerationGroup(savedPost, savedPost.channel))
+          .catch((error) => {
+            console.log('Error on saving new post!');
+            console.log(`Error message: ${error.message}`);
+          });
+      });
     });
   }, null, true);
 };

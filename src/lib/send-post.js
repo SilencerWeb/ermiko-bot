@@ -28,14 +28,24 @@ const sendPost = (post, chat, isChatModerationGroup) => {
 
         Post.findByIdAndUpdate(_id, updateOptions, (error) => {
           if (error) {
-            console.log(`Error on changing post's "moderationGroupMessageId" with ID ${_id} to "${moderationGroupMessageId}"!`);
-            console.log(`Error message: ${error.message}`);
+            if (isChatModerationGroup === true) {
+              console.log(`Error on changing post's "moderationGroupMessageId" with ID ${_id} to "${updateOptions.moderationGroupMessageId}"!`);
+              console.log(`Error message: ${error.message}`);
+            } else {
+              console.log(`Error on changing post's "status" with ID ${_id} to "${updateOptions.status}"!`);
+              console.log(`Error message: ${error.message}`);
+            }
           }
         });
       })
       .catch((error) => {
-        console.log(`Error on sending post with ID ${_id} to moderation group!`);
-        console.log(`Error message: ${error.message}`);
+        if (isChatModerationGroup === true) {
+          console.log(`Error on sending post with ID ${_id} to moderation group!`);
+          console.log(`Error message: ${error.message}`);
+        } else {
+          console.log(`Error on sending post with ID ${_id} to the channel "${chat}"!`);
+          console.log(`Error message: ${error.message}`);
+        }
       });
   } else if (type === 'image') {
     return bot.telegram.sendPhoto(chat, link, options)
@@ -50,14 +60,24 @@ const sendPost = (post, chat, isChatModerationGroup) => {
 
         Post.findByIdAndUpdate(_id, updateOptions, (error) => {
           if (error) {
-            console.log(`Error on changing post's "moderationGroupMessageId" with ID ${_id} to "${moderationGroupMessageId}"!`);
-            console.log(`Error message: ${error.message}`);
+            if (isChatModerationGroup === true) {
+              console.log(`Error on changing post's "moderationGroupMessageId" with ID ${_id} to "${updateOptions.moderationGroupMessageId}"!`);
+              console.log(`Error message: ${error.message}`);
+            } else {
+              console.log(`Error on changing post's "status" with ID ${_id} to "${updateOptions.status}"!`);
+              console.log(`Error message: ${error.message}`);
+            }
           }
         });
       })
       .catch((error) => {
-        console.log(`Error on sending post with ID ${_id} to moderation group!`);
-        console.log(`Error message: ${error.message}`);
+        if (isChatModerationGroup === true) {
+          console.log(`Error on sending post with ID ${_id} to moderation group!`);
+          console.log(`Error message: ${error.message}`);
+        } else {
+          console.log(`Error on sending post with ID ${_id} to the channel "${chat}"!`);
+          console.log(`Error message: ${error.message}`);
+        }
       });
   }
 };
