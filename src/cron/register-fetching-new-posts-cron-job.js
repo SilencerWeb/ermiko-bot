@@ -38,7 +38,7 @@ const registerFetchingNewPostsCronJob = () => {
 
   new CronJob('*/30 * * * * *', () => { // Every 30th second
     Object.keys(CHANNELS_INFO).forEach(async (channelName) => {
-      const waitingForModerationPostsAmount = await Post.countDocuments({ channel: channelName, status: 'waitingForModeration' });
+      let waitingForModerationPostsAmount = await Post.countDocuments({ channel: channelName, status: 'waitingForModeration' });
       if (waitingForModerationPostsAmount > WAITING_FOR_MODERATION_POSTS_LIMIT) return;
 
       const fetchResponse = await fetchNewPosts(channelName);
@@ -50,6 +50,9 @@ const registerFetchingNewPostsCronJob = () => {
       recentPosts.forEach((post) => {
         const formattedPost = formatPost(post);
         if (!formattedPost) return;
+
+        waitingForModerationPostsAmount += 1;
+        if (waitingForModerationPostsAmount > WAITING_FOR_MODERATION_POSTS_LIMIT) return;
 
         formattedPost.channel = Object.keys(CHANNELS_INFO).find((channelName) => CHANNELS_INFO[channelName].subreddit === post.data.subreddit);
 
