@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 
-const setUpDatabase = () => {
+const database = () => {
   mongoose.connect(
     `mongodb+srv://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@${process.env.DATABASE_NAME}-cqxka.mongodb.net/${process.env.NODE_ENV}?retryWrites=true&w=majority`,
     {
@@ -21,4 +21,4 @@ const setUpDatabase = () => {
 };
 
 
-module.exports = { setUpDatabase };
+module.exports = { setUpDatabase: database };

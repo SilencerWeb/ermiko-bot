@@ -1,5 +1,6 @@
 require('dotenv').config();
-const { setUpDatabase } = require('./lib');
+const { startServer } = require('./server');
+const { setUpDatabase } = require('./database');
 const {
   registerFetchingNewPostsCronJob,
   registerDeletingDismissedPostsCronJob,
@@ -17,6 +18,9 @@ const {
 } = require('./actions');
 const { bot } = require('./bot');
 
+
+// Starting the server. Required by Heroku
+startServer();
 
 // Setting up database
 setUpDatabase();
