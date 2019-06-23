@@ -13,7 +13,7 @@ const publishRandomApprovedPost = async (channelName) => {
     const channel = getChannel(channelName);
     if (!channel) throw new Error(`Channel "${channelName}" doesn't exist`);
 
-    chat = channelName.username;
+    chat = channel.username;
     queryOptions.channelName = channelName;
   }
 
