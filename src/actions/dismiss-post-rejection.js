@@ -1,7 +1,8 @@
 const { generatePostKeyboard } = require('../keyboards');
+const { getChannel } = require('../utils');
 const { Post } = require('../models');
 const { bot } = require('../bot');
-const { CHANNELS_INFO, ACTION_NAMES, IS_PRODUCTION, DEVELOPMENT_GROUP_ID } = require('../constants');
+const { ACTION_NAMES, IS_PRODUCTION, DEVELOPMENT_GROUP_ID } = require('../constants');
 
 
 const setUpDismissPostRejectionAction = () => {
@@ -11,14 +12,14 @@ const setUpDismissPostRejectionAction = () => {
 
     const post = await Post.findById(id);
 
-    const channelInfo = CHANNELS_INFO[post.channel];
-    const moderationGroupId = IS_PRODUCTION ? channelInfo.moderationGroupId : DEVELOPMENT_GROUP_ID;
+    const channel = getChannel(post.channel);
+    const moderationGroupId = IS_PRODUCTION ? channel.moderationGroupId : DEVELOPMENT_GROUP_ID;
     const moderationGroupMessageId = post.moderationGroupMessageId;
     const isCaptionVisible = post.isCaptionVisible;
     const keyboard = generatePostKeyboard(id, isCaptionVisible);
 
-    bot.telegram.editMessageReplyMarkup(moderationGroupId, moderationGroupMessageId, '', keyboard);
-    bot.telegram.answerCbQuery(callbackQueryId, '');
+    context.telegram.editMessageReplyMarkup(moderationGroupId, moderationGroupMessageId, '', keyboard);
+    context.telegram.answerCbQuery(callbackQueryId, '');
   });
 };
 

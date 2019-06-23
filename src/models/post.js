@@ -3,15 +3,15 @@ const mongoose = require('mongoose');
 
 const postSchema = new mongoose.Schema({
   title: String,
-  isCaptionVisible: { type: Boolean, default: true },
   type: String,
   link: String,
-  status: { type: String, default: 'waitingForModeration' }, // published | failed | approved | dismissed | waitingForModeration
-  channel: String,
-  moderationGroupMessageId: String,
   created: { type: Date, default: Date.now() },
+  channelName: String,
+  status: { type: String, default: 'waitingForModeration' }, // published | failed | approved | dismissed | waitingForModeration
+  errorMessage: String,
+  moderationGroupMessageId: String,
   originalPostLink: String,
-  error: String,
+  isCaptionVisible: { type: Boolean, default: true },
 });
 
 const Post = mongoose.model('Post', postSchema);

@@ -1,7 +1,8 @@
 const { generateApprovedPostKeyboard } = require('../keyboards');
+const { getChannel } = require('../utils');
 const { Post } = require('../models');
 const { bot } = require('../bot');
-const { CHANNELS_INFO, ACTION_NAMES, IS_PRODUCTION, DEVELOPMENT_GROUP_ID } = require('../constants');
+const { ACTION_NAMES, IS_PRODUCTION, DEVELOPMENT_GROUP_ID } = require('../constants');
 
 
 const setUpApprovePostConfirmationAction = () => {
@@ -13,17 +14,17 @@ const setUpApprovePostConfirmationAction = () => {
       if (error) {
         console.log(`Error on changing post's "status" with ID ${id} to "approved"!`);
         console.log(`Error message: ${error.message}`);
-        bot.telegram.answerCbQuery(callbackQueryId, `Couldn't approve post. Error: ${error.message}`);
+        context.telegram.answerCbQuery(callbackQueryId, `Couldn't approve post. Error: ${error.message}`);
       } else {
         const post = await Post.findById(id);
 
-        const channelInfo = CHANNELS_INFO[post.channel];
-        const moderationGroupId = IS_PRODUCTION ? channelInfo.moderationGroupId : DEVELOPMENT_GROUP_ID;
+        const channel = getChannel(post.channel);
+        const moderationGroupId = IS_PRODUCTION ? channel.moderationGroupId : DEVELOPMENT_GROUP_ID;
         const moderationGroupMessageId = post.moderationGroupMessageId;
         const keyboard = generateApprovedPostKeyboard(id);
 
-        bot.telegram.editMessageReplyMarkup(moderationGroupId, moderationGroupMessageId, '', keyboard);
-        bot.telegram.answerCbQuery(callbackQueryId, 'Post was successfully approved');
+        context.telegram.editMessageReplyMarkup(moderationGroupId, moderationGroupMessageId, '', keyboard);
+        context.telegram.answerCbQuery(callbackQueryId, 'Post was successfully approved');
       }
     });
   });

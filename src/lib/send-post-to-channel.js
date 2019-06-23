@@ -1,8 +1,8 @@
 const { sendPost } = require('./send-post');
 
 
-const sendPostToChannel = (post, channel) => {
-  return sendPost(post, channel);
+const sendPostToChannel = (post, channelUsername) => {
+  return sendPost(post, channelUsername);
 };
 
 

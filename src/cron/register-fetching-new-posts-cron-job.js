@@ -1,14 +1,14 @@
 const CronJob = require('cron').CronJob;
 const axios = require('axios');
 const { createPost, formatPost, sendPostToModerationGroup } = require('../lib');
-const { getCurrentUTCDate, transformUnixTimestampIntoDate, getOffsetDate } = require('../utils');
+const { getCurrentUTCDate, transformUnixTimestampIntoDate, getOffsetDate, getChannel } = require('../utils');
 const { Post } = require('../models');
-const { CHANNELS_INFO } = require('../constants');
+const { CHANNELS } = require('../constants');
 
 
-const fetchNewPosts = (channel) => {
-  const channelInfo = CHANNELS_INFO[channel];
-  const subreddit = channelInfo.subreddit;
+const fetchNewPosts = (channelName) => {
+  const channel = getChannel(channelName);
+  const subreddit = channel.subreddit;
   const subredditNewPostsUrl = `https://reddit.com/r/${subreddit}/new.json?limit=100`;
 
   return axios.get(subredditNewPostsUrl).catch((error) => {
@@ -37,11 +37,14 @@ const registerFetchingNewPostsCronJob = () => {
   const WAITING_FOR_MODERATION_POSTS_LIMIT = 20;
 
   new CronJob('*/30 * * * * *', () => { // Every 30th second
-    Object.keys(CHANNELS_INFO).forEach(async (channelName) => {
-      let waitingForModerationPostsAmount = await Post.countDocuments({ channel: channelName, status: 'waitingForModeration' });
+    CHANNELS.forEach(async (channel) => {
+      let waitingForModerationPostsAmount = await Post.countDocuments({
+        channelName: channel.name,
+        status: 'waitingForModeration',
+      });
       if (waitingForModerationPostsAmount > WAITING_FOR_MODERATION_POSTS_LIMIT) return;
 
-      const fetchResponse = await fetchNewPosts(channelName);
+      const fetchResponse = await fetchNewPosts(channel.name);
       if (!fetchResponse) return;
 
       const posts = getPostsFromFetchResponse(fetchResponse);
@@ -54,10 +57,11 @@ const registerFetchingNewPostsCronJob = () => {
         waitingForModerationPostsAmount += 1;
         if (waitingForModerationPostsAmount > WAITING_FOR_MODERATION_POSTS_LIMIT) return;
 
-        formattedPost.channel = Object.keys(CHANNELS_INFO).find((channelName) => CHANNELS_INFO[channelName].subreddit === post.data.subreddit);
+        const channel = CHANNELS.find((channel) => channel.subreddit === post.data.subreddit);
+        formattedPost.channelName = channel.name;
 
         createPost(formattedPost)
-          .then((savedPost) => sendPostToModerationGroup(savedPost, savedPost.channel))
+          .then((savedPost) => sendPostToModerationGroup(savedPost, savedPost.channelName))
           .catch((error) => {
             console.log('Error on saving new post!');
             console.log(`Error message: ${error.message}`);

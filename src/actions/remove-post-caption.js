@@ -1,7 +1,8 @@
 const { generatePostKeyboard } = require('../keyboards');
+const { getChannel } = require('../utils');
 const { Post } = require('../models');
 const { bot } = require('../bot');
-const { CHANNELS_INFO, ACTION_NAMES, IS_PRODUCTION, DEVELOPMENT_GROUP_ID } = require('../constants');
+const { ACTION_NAMES, IS_PRODUCTION, DEVELOPMENT_GROUP_ID } = require('../constants');
 
 
 const setUpRemovePostCaptionAction = () => {
@@ -13,17 +14,17 @@ const setUpRemovePostCaptionAction = () => {
       if (error) {
         console.log(`Error on changing post's "isCaptionVisible" with ID ${id} to "false"`);
         console.log(`Error message: ${error.message}`);
-        bot.telegram.answerCbQuery(callbackQueryId, `Couldn't remove caption. Error: ${error.message}`);
+        context.telegram.answerCbQuery(callbackQueryId, `Couldn't remove caption. Error: ${error.message}`);
       } else {
         const post = await Post.findById(id);
 
-        const channelInfo = CHANNELS_INFO[post.channel];
-        const moderationGroupId = IS_PRODUCTION ? channelInfo.moderationGroupId : DEVELOPMENT_GROUP_ID;
+        const channel = getChannel(post.channel);
+        const moderationGroupId = IS_PRODUCTION ? channel.moderationGroupId : DEVELOPMENT_GROUP_ID;
         const moderationGroupMessageId = post.moderationGroupMessageId;
         const keyboard = generatePostKeyboard(id, false);
 
-        bot.telegram.editMessageCaption(moderationGroupId, moderationGroupMessageId, '', '', { reply_markup: keyboard });
-        bot.telegram.answerCbQuery(callbackQueryId, 'Caption was successfully removed');
+        context.telegram.editMessageCaption(moderationGroupId, moderationGroupMessageId, '', '', { reply_markup: keyboard });
+        context.telegram.answerCbQuery(callbackQueryId, 'Caption was successfully removed');
       }
     });
   });

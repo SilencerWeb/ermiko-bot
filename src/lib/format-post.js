@@ -49,7 +49,7 @@ const formatPost = (post) => {
   }
 
   // We don't need to push object if it doesn't have a link
-  if (!formattedPost.link) return false;
+  if (!formattedPost.link) return null;
 
 
   return formattedPost;
