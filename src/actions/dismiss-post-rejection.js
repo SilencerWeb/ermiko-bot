@@ -1,5 +1,5 @@
-const { Post } = require('../models');
 const { generatePostKeyboard } = require('../keyboards');
+const { Post } = require('../models');
 const { bot } = require('../bot');
 const { CHANNELS_INFO, ACTION_NAMES, IS_PRODUCTION, DEVELOPMENT_GROUP_ID } = require('../constants');
 
@@ -15,8 +15,9 @@ const setUpDismissPostRejectionAction = () => {
     const moderationGroupId = IS_PRODUCTION ? channelInfo.moderationGroupId : DEVELOPMENT_GROUP_ID;
     const moderationGroupMessageId = post.moderationGroupMessageId;
     const isCaptionVisible = post.isCaptionVisible;
+    const keyboard = generatePostKeyboard(id, isCaptionVisible);
 
-    bot.telegram.editMessageReplyMarkup(moderationGroupId, moderationGroupMessageId, '', generatePostKeyboard(id, isCaptionVisible));
+    bot.telegram.editMessageReplyMarkup(moderationGroupId, moderationGroupMessageId, '', keyboard);
     bot.telegram.answerCbQuery(callbackQueryId, '');
   });
 };

@@ -9,6 +9,10 @@ const {
   setUpDismissPostConfirmationAction,
   setUpApprovePostRejectionAction,
   setUpDismissPostRejectionAction,
+  setUpApprovedPostAction,
+  setUpDismissedPostAction,
+  setUpUndoPostModerationConfirmationAction,
+  setUpUndoPostModerationRejectionAction,
   setUpRemovePostCaptionAction,
   setUpReturnPostCaptionAction,
 } = require('./actions');
@@ -33,6 +37,10 @@ setUpApprovePostRejectionAction();
 setUpDismissPostRejectionAction();
 setUpApprovePostAction();
 setUpDismissPostAction();
+setUpApprovedPostAction();
+setUpDismissedPostAction();
+setUpUndoPostModerationConfirmationAction();
+setUpUndoPostModerationRejectionAction();
 setUpRemovePostCaptionAction();
 setUpReturnPostCaptionAction();
 

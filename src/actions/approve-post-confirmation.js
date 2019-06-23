@@ -1,3 +1,4 @@
+const { generateApprovedPostKeyboard } = require('../keyboards');
 const { Post } = require('../models');
 const { bot } = require('../bot');
 const { CHANNELS_INFO, ACTION_NAMES, IS_PRODUCTION, DEVELOPMENT_GROUP_ID } = require('../constants');
@@ -19,8 +20,9 @@ const setUpApprovePostConfirmationAction = () => {
         const channelInfo = CHANNELS_INFO[post.channel];
         const moderationGroupId = IS_PRODUCTION ? channelInfo.moderationGroupId : DEVELOPMENT_GROUP_ID;
         const moderationGroupMessageId = post.moderationGroupMessageId;
+        const keyboard = generateApprovedPostKeyboard(id);
 
-        bot.telegram.deleteMessage(moderationGroupId, moderationGroupMessageId);
+        bot.telegram.editMessageReplyMarkup(moderationGroupId, moderationGroupMessageId, '', keyboard);
         bot.telegram.answerCbQuery(callbackQueryId, 'Post was successfully approved');
       }
     });

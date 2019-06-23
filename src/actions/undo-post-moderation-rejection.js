@@ -1,11 +1,11 @@
-const { generatePostApproveConfirmationKeyboard } = require('../keyboards');
+const { generateApprovedPostKeyboard, generateDismissedPostKeyboard } = require('../keyboards');
 const { Post } = require('../models');
 const { bot } = require('../bot');
 const { CHANNELS_INFO, ACTION_NAMES, IS_PRODUCTION, DEVELOPMENT_GROUP_ID } = require('../constants');
 
 
-const setUpApprovePostAction = () => {
-  bot.action(ACTION_NAMES.approve_post.regexp, async (context) => {
+const setUpUndoPostModerationRejectionAction = () => {
+  bot.action(ACTION_NAMES.undo_post_moderation_rejection.regexp, async (context) => {
     const id = context.match[1];
     const callbackQueryId = context.update.callback_query.id;
 
@@ -14,7 +14,7 @@ const setUpApprovePostAction = () => {
     const channelInfo = CHANNELS_INFO[post.channel];
     const moderationGroupId = IS_PRODUCTION ? channelInfo.moderationGroupId : DEVELOPMENT_GROUP_ID;
     const moderationGroupMessageId = post.moderationGroupMessageId;
-    const keyboard = generatePostApproveConfirmationKeyboard(id);
+    const keyboard = post.status === 'approved' ? generateApprovedPostKeyboard(id) : generateDismissedPostKeyboard(id);
 
     bot.telegram.editMessageReplyMarkup(moderationGroupId, moderationGroupMessageId, '', keyboard);
     bot.telegram.answerCbQuery(callbackQueryId, '');
@@ -22,4 +22,4 @@ const setUpApprovePostAction = () => {
 };
 
 
-module.exports = { setUpApprovePostAction };
+module.exports = { setUpUndoPostModerationRejectionAction };

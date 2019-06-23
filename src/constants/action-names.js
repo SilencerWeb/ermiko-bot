@@ -23,6 +23,22 @@ const ACTION_NAMES = {
     regexp: /dismiss_post_rejection_(.+)/,
     string: 'dismiss_post_rejection',
   },
+  approved_post: {
+    regexp: /approved_post_(.+)/,
+    string: 'approved_post',
+  },
+  dismissed_post: {
+    regexp: /dismissed_post_(.+)/,
+    string: 'dismissed_post',
+  },
+  undo_post_moderation_confirmation: {
+    regexp: /undo_post_moderation_confirmation_(.+)/,
+    string: 'undo_post_moderation_confirmation',
+  },
+  undo_post_moderation_rejection: {
+    regexp: /undo_post_moderation_rejection_(.+)/,
+    string: 'undo_post_moderation_rejection',
+  },
   remove_post_caption: {
     regexp: /remove_post_caption_(.+)/,
     string: 'remove_post_caption',
