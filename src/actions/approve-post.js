@@ -12,7 +12,7 @@ const setUpApprovePostAction = () => {
 
     const post = await Post.findById(id);
 
-    const channel = getChannel(post.channel);
+    const channel = getChannel(post.channelName);
     const moderationGroupId = IS_PRODUCTION ? channel.moderationGroupId : DEVELOPMENT_GROUP_ID;
     const moderationGroupMessageId = post.moderationGroupMessageId;
     const keyboard = generatePostApproveConfirmationKeyboard(id);
