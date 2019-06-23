@@ -3,10 +3,10 @@ const CHANNELS_INFO = {
     subreddit: 'aww',
     moderationGroupId: '-1001399941830',
   },
-  'InterestingAsFuckk': {
-    subreddit: 'interestingasfuck',
-    moderationGroupId: '-1001289633926',
-  },
+  // 'InterestingAsFuckk': {
+  //   subreddit: 'interestingasfuck',
+  //   moderationGroupId: '-1001289633926',
+  // },
 };
 
 
