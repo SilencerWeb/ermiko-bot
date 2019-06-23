@@ -34,7 +34,7 @@ const getRecentPosts = (posts) => {
 
 
 const registerFetchingNewPostsCronJob = () => {
-  const WAITING_FOR_MODERATION_POSTS_LIMIT = 20;
+  const WAITING_FOR_MODERATION_POSTS_LIMIT = 10;
 
   new CronJob('*/30 * * * * *', () => { // Every 30th second
     CHANNELS.forEach(async (channel) => {
