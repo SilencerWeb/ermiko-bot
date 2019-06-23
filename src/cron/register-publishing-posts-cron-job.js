@@ -24,7 +24,7 @@ const publishRandomApprovedPost = async (channel) => {
 const registerPublishingPostsCronJob = () => {
   const CRON_JOB_TIMES = [
     '0 0 * * * *', // Every 0th minute
-    '0 30 3-15 * * *', // Every 30th minute between 3:00 and 15:00 UTC (8:00 and 20:00 GMT+5, Tashkent)
+    '0 30 * * * *', // Every 30th minute
   ];
 
   CRON_JOB_TIMES.forEach((cronJobTime) => {
