@@ -49,7 +49,7 @@ const sendPost = (post, chat, isChatModerationGroup) => {
           }
         } else {
           if (isChatModerationGroup !== true) {
-            const channel = getChannel(post.channel);
+            const channel = getChannel(post.channelName);
             const moderationGroupId = IS_PRODUCTION ? channel.moderationGroupId : DEVELOPMENT_GROUP_ID;
             const moderationGroupMessageId = post.moderationGroupMessageId;
             const messageLink = getMessageLink(message.chat.id, message.message_id);
