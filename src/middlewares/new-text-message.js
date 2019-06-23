@@ -27,7 +27,10 @@ const setUpNewTextMessageMiddleware = () => {
         console.log(`Error message: ${error.message}`);
       } else {
         context.telegram.editMessageCaption(moderationGroupId, replyToMessageId, '', newTitle, { reply_markup: replyMarkup });
-        context.telegram.deleteMessage(moderationGroupId, context.update.message.message_id);
+
+        setTimeout(() => {
+          context.telegram.deleteMessage(moderationGroupId, context.update.message.message_id);
+        }, 5000); // 5000 milliseconds = 5 seconds
       }
     });
   });
