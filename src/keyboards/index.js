@@ -4,6 +4,7 @@ const { generatePostDismissConfirmationKeyboard } = require('./post-dismiss-conf
 const { generateApprovedPostKeyboard } = require('./approved-post-keyboard');
 const { generateDismissedPostKeyboard } = require('./dismissed-post-keyboard');
 const { generateUndoPostModerationConfirmationKeyboard } = require('./undo-post-moderation-confirmation');
+const { generatePublishedPostKeyboard } = require('./published-post-keyboard');
 
 
 module.exports = {
@@ -13,4 +14,5 @@ module.exports = {
   generateApprovedPostKeyboard,
   generateDismissedPostKeyboard,
   generateUndoPostModerationConfirmationKeyboard,
+  generatePublishedPostKeyboard,
 };

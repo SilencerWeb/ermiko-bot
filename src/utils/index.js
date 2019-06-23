@@ -3,6 +3,7 @@ const { getOffsetDate } = require('./get-offset-date');
 const { transformUnixTimestampIntoDate } = require('./transform-unix-timestamp-into-date');
 const { prettifyTitle } = require('./prettify-title');
 const { getChannel } = require('./get-channel');
+const { getMessageLink } = require('./get-message-link');
 
 
 module.exports = {
@@ -11,4 +12,5 @@ module.exports = {
   transformUnixTimestampIntoDate,
   prettifyTitle,
   getChannel,
+  getMessageLink,
 };

@@ -1,6 +1,8 @@
 const { Post } = require('../models');
-const { generatePostKeyboard } = require('../keyboards');
+const { generatePostKeyboard, generatePublishedPostKeyboard } = require('../keyboards');
+const { getChannel, getMessageLink } = require('../utils');
 const { bot } = require('../bot');
+const { IS_PRODUCTION, DEVELOPMENT_GROUP_ID } = require('../constants');
 
 
 const sendPhotoOrVideo = (chat, link, options = {}, type) => {
@@ -44,6 +46,16 @@ const sendPost = (post, chat, isChatModerationGroup) => {
           } else {
             console.log(`Error on changing post's "status" with ID ${_id} to "${updateOptions.status}"!`);
             console.log(`Error message: ${error.message}`);
+          }
+        } else {
+          if (isChatModerationGroup !== true) {
+            const channel = getChannel(post.channel);
+            const moderationGroupId = IS_PRODUCTION ? channel.moderationGroupId : DEVELOPMENT_GROUP_ID;
+            const moderationGroupMessageId = post.moderationGroupMessageId;
+            const messageLink = getMessageLink(message.chat.id, message.message_id);
+            const keyboard = generatePublishedPostKeyboard(messageLink);
+
+            bot.telegram.editMessageReplyMarkup(moderationGroupId, moderationGroupMessageId, '', keyboard);
           }
         }
       });
