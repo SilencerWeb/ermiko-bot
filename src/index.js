@@ -2,6 +2,7 @@ require('dotenv').config();
 const { startServer } = require('./server');
 const { setUpDatabase } = require('./database');
 const { registerFetchingNewPostsCronJob, registerPublishingPostsCronJob } = require('./cron');
+const { setUpNewTextMessageMiddleware } = require('./middlewares');
 const {
   setUpApprovePostAction,
   setUpDismissPostAction,
@@ -28,6 +29,9 @@ setUpDatabase();
 // Registering cron jobs
 registerFetchingNewPostsCronJob();
 registerPublishingPostsCronJob();
+
+// Setting up middlewares
+setUpNewTextMessageMiddleware();
 
 // Setting up actions
 // Order matters because of regexps!

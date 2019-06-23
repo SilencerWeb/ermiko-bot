@@ -3,7 +3,7 @@ const axios = require('axios');
 const { createPost, formatPost, sendPostToModerationGroup } = require('../lib');
 const { getCurrentUTCDate, transformUnixTimestampIntoDate, getOffsetDate, getChannel } = require('../utils');
 const { Post } = require('../models');
-const { CHANNELS } = require('../constants');
+const { CHANNELS, IS_PRODUCTION, DEVELOPMENT_CHANNEL_ID } = require('../constants');
 
 
 const fetchNewPosts = (channelName) => {
@@ -57,8 +57,8 @@ const registerFetchingNewPostsCronJob = () => {
         waitingForModerationPostsAmount += 1;
         if (waitingForModerationPostsAmount > WAITING_FOR_MODERATION_POSTS_LIMIT) return;
 
-        const channel = CHANNELS.find((channel) => channel.subreddit === post.data.subreddit);
-        formattedPost.channelName = channel.name;
+        const channel = IS_PRODUCTION ? CHANNELS.find((channel) => channel.subreddit === post.data.subreddit) : DEVELOPMENT_CHANNEL_ID;
+        formattedPost.channelName = IS_PRODUCTION ? channel.name : channel;
 
         createPost(formattedPost)
           .then((savedPost) => sendPostToModerationGroup(savedPost, savedPost.channelName))

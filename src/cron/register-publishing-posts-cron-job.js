@@ -9,7 +9,7 @@ const publishRandomApprovedPost = async (channelName) => {
   let chat = channelName;
   const queryOptions = { status: 'approved' };
 
-  if (IS_PRODUCTION === true) {
+  if (IS_PRODUCTION) {
     const channel = getChannel(channelName);
     if (!channel) throw new Error(`Channel "${channelName}" doesn't exist`);
 
