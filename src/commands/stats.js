@@ -1,6 +1,6 @@
 const { Post } = require('../models');
 const { bot } = require('../bot');
-const { ADMIN_IDS, CHANNELS } = require('../constants');
+const { ADMIN_IDS, CHANNELS, IS_PRODUCTION } = require('../constants');
 
 
 const setUpStatsCommand = () => {
@@ -14,10 +14,8 @@ const setUpStatsCommand = () => {
 
     await Promise.all(
       CHANNELS.map(async (channel) => {
-        const approvedPostsCount = await Post.countDocuments({
-          channelName: channel.name,
-          status: 'approved',
-        });
+        const searchQuery = IS_PRODUCTION ? { channelName: channel.name, status: 'approved' } : { status: 'approved' };
+        const approvedPostsCount = await Post.countDocuments(searchQuery);
 
         message += `*Approved* posts in the channel *${channel.name}*: *${approvedPostsCount}*\n`;
       }),
