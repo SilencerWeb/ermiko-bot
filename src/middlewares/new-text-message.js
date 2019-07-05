@@ -34,7 +34,7 @@ const setUpNewTextMessageMiddleware = () => {
           console.log(`Error on changing post's "title" with ID ${id} to "${newTitle}"!`);
           console.log(`Error message: ${error.message}`);
         } else {
-          context.editMessageCaption(replyToMessageId, '', newTitle, { reply_markup: replyMarkup });
+          context.telegram.editMessageCaption(moderationGroupId, replyToMessageId, '', newTitle, { reply_markup: replyMarkup });
 
           setTimeout(() => {
             context.deleteMessage(context.update.message.message_id);
@@ -64,7 +64,7 @@ const setUpNewTextMessageMiddleware = () => {
         const channel = IS_PRODUCTION ? CHANNELS.find((channel) => channel.subreddit === post.data.subreddit) : DEVELOPMENT_CHANNEL_ID;
         formattedPost.channelName = IS_PRODUCTION ? channel.name : channel;
 
-        if (IS_PRODUCTION && channel.moderationGroupId !== context.update.message.chat.id) return context.deleteMessage(context.update.message.message_id); // We don't need to save the post from the wrong subreddit
+        if (IS_PRODUCTION && channel.moderationGroupId !== context.update.message.chat.id.toString()) return context.deleteMessage(context.update.message.message_id); // We don't need to save the post from the wrong subreddit
 
         return createPost(formattedPost)
           .then((savedPost) => {
