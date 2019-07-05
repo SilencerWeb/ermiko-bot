@@ -3,11 +3,16 @@ const { createPost, formatPost, sendPostToModerationGroup } = require('../lib');
 const { Post } = require('../models');
 const { bot } = require('../bot');
 const { isRedditSubredditURL } = require('../utils');
-const { CHANNELS, IS_PRODUCTION, DEVELOPMENT_CHANNEL_ID } = require('../constants');
+const { ADMIN_IDS, CHANNELS, IS_PRODUCTION, DEVELOPMENT_CHANNEL_ID } = require('../constants');
 
 
 const setUpNewTextMessageMiddleware = () => {
   bot.on('text', async (context) => {
+    const messageFromId = context.update.message.from.id;
+    const messageId = context.update.message.message_id;
+
+    if (!ADMIN_IDS.some((adminId) => adminId === messageFromId.toString())) return context.deleteMessage(messageId);
+
     const replyToMessage = context.update.message.reply_to_message;
 
     if (replyToMessage) {
@@ -29,10 +34,10 @@ const setUpNewTextMessageMiddleware = () => {
           console.log(`Error on changing post's "title" with ID ${id} to "${newTitle}"!`);
           console.log(`Error message: ${error.message}`);
         } else {
-          context.telegram.editMessageCaption(moderationGroupId, replyToMessageId, '', newTitle, { reply_markup: replyMarkup });
+          context.editMessageCaption(replyToMessageId, '', newTitle, { reply_markup: replyMarkup });
 
           setTimeout(() => {
-            context.telegram.deleteMessage(moderationGroupId, context.update.message.message_id);
+            context.deleteMessage(context.update.message.message_id);
           }, 5000); // 5000 milliseconds = 5 seconds
         }
       });
@@ -45,6 +50,8 @@ const setUpNewTextMessageMiddleware = () => {
             console.log(`Error on fetching a post by url ${messageText}!`);
             console.log(`Error message: ${error.message}`);
           });
+
+        if (!response.data[0].data) return;
 
         const post = response.data[0].data.children[0];
 

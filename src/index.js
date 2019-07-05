@@ -2,6 +2,7 @@ require('dotenv').config();
 const { startServer } = require('./server');
 const { setUpDatabase } = require('./database');
 const { registerFetchingNewPostsCronJob, registerPublishingPostsCronJob } = require('./cron');
+const { setUpStatsCommand } = require('./commands');
 const { setUpNewTextMessageMiddleware } = require('./middlewares');
 const {
   setUpApprovePostAction,
@@ -30,6 +31,9 @@ setUpDatabase();
 registerFetchingNewPostsCronJob();
 registerPublishingPostsCronJob();
 
+// Setting up commands
+setUpStatsCommand();
+
 // Setting up middlewares
 setUpNewTextMessageMiddleware();
 
@@ -49,5 +53,5 @@ setUpRemovePostCaptionAction();
 setUpReturnPostCaptionAction();
 
 // Starting bot
-bot.startPolling();
+bot.launch();
 console.log('Bot is up and running');
