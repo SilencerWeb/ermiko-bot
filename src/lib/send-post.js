@@ -17,11 +17,12 @@ const sendPhotoOrVideo = (chat, link, options = {}, type) => {
 
 
 const sendPost = (post, chat, isChatModerationGroup) => {
-  const { _id, title, link, type, isCaptionVisible } = post;
+  const { _id, title, link, type, originalPostLink, isCaptionVisible } = post;
 
   const options = {};
   if (title && isCaptionVisible) {
-    options.caption = title;
+    const titleWithPostLink = `${title}\n\n${originalPostLink}`;
+    options.caption = IS_PRODUCTION ? title : titleWithPostLink;
   }
 
   if (isChatModerationGroup === true) {
