@@ -4,6 +4,7 @@ const { transformUnixTimestampIntoDate } = require('./transform-unix-timestamp-i
 const { prettifyTitle } = require('./prettify-title');
 const { getChannel } = require('./get-channel');
 const { getMessageLink } = require('./get-message-link');
+const { isRedditSubredditURL } = require('./is-reddit-subreddit-url');
 
 
 module.exports = {
@@ -13,4 +14,5 @@ module.exports = {
   prettifyTitle,
   getChannel,
   getMessageLink,
+  isRedditSubredditURL,
 };
