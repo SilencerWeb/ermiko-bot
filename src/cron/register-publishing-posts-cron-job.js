@@ -26,7 +26,8 @@ const publishRandomApprovedPost = async (channelName) => {
 
 const registerPublishingPostsCronJob = () => {
   const CRON_JOB_TIMES = [
-    '0 0 5,7,9,11,13,15,17,19 * * *',
+    '0 0 5,8,11,14,17,20 * * *',
+    '0 30 6,9,12,15,18 * * *',
   ];
 
   CRON_JOB_TIMES.forEach((cronJobTime) => {
